@@ -32,16 +32,11 @@ class ShadowsocksRust < Formula
           "method":null
       }
     EOS
-    server = fork { exec bin/"ssserver", "-c", testpath/"shadowsocks-rust.json" }
-    client = fork { exec bin/"sslocal", "-c", testpath/"shadowsocks-rust.json" }
+    fork { exec bin/"ssserver", "-c", testpath/"shadowsocks-rust.json" }
+    fork { exec bin/"sslocal", "-c", testpath/"shadowsocks-rust.json" }
     sleep 3
-    begin
-      system "curl", "--socks5", "127.0.0.1:#{local_port}", "github.com"
-    ensure
-      Process.kill 9, server
-      Process.wait server
-      Process.kill 9, client
-      Process.wait client
-    end
+
+    output = shell_output "curl", "--socks5", "127.0.0.1:#{local_port}", "https://github.com"
+    assert_match "Where the world builds software", output
   end
 end
