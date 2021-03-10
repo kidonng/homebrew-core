@@ -6,11 +6,6 @@ class ShadowsocksRust < Formula
   license "MIT"
   head "https://github.com/shadowsocks/shadowsocks-rust.git"
 
-  livecheck do
-    url :stable
-    strategy :github_latest
-  end
-
   depends_on "rust" => :build
 
   def install
